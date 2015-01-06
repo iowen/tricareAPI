@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="tcare" Class="TriCareDataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=MANDRAKE.arvixe.com;Initial Catalog=tcare;User ID=paul1of1" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="tcareConnectionString1" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Account" Member="Accounts">
+    <Type Name="Account">
+      <Column Name="AccountId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Association Name="Account_Prescriber" Member="Prescribers" ThisKey="AccountId" OtherKey="AccountId" Type="Prescriber" />
+    </Type>
+  </Table>
+  <Table Name="dbo.RefillQuantity" Member="RefillQuantities">
+    <Type Name="RefillQuantity">
+      <Column Name="RefillQuantityId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Quantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="RefillQuantity_PresciptionRefill" Member="PresciptionRefills" ThisKey="RefillQuantityId" OtherKey="RefillQuantityId" Type="PresciptionRefill" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Ingredient" Member="Ingredients">
+    <Type Name="Ingredient">
+      <Column Name="IngredientId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="Ingredient_MedicineIngredient" Member="MedicineIngredients" ThisKey="IngredientId" OtherKey="IngredientId" Type="MedicineIngredient" />
+      <Association Name="Ingredient_PrescriptionMedicineIngredient" Member="PrescriptionMedicineIngredients" ThisKey="IngredientId" OtherKey="IngredientId" Type="PrescriptionMedicineIngredient" />
+    </Type>
+  </Table>
+  <Table Name="dbo.InsuranceCarrier" Member="InsuranceCarriers">
+    <Type Name="InsuranceCarrier">
+      <Column Name="InsuranceCarrierId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="InsuranceCarrier_Patient" Member="Patients" ThisKey="InsuranceCarrierId" OtherKey="InsuranceCarrierId" Type="Patient" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Medicine" Member="Medicines">
+    <Type Name="Medicine">
+      <Column Name="MedicineId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="Medicine_MedicineIngredient" Member="MedicineIngredients" ThisKey="MedicineId" OtherKey="MedicineId" Type="MedicineIngredient" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MedicineIngredient" Member="MedicineIngredients">
+    <Type Name="MedicineIngredient">
+      <Column Name="MedicineIngredientId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MedicineId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IngredientId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Percentage" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Association Name="Ingredient_MedicineIngredient" Member="Ingredient" ThisKey="IngredientId" OtherKey="IngredientId" Type="Ingredient" IsForeignKey="true" />
+      <Association Name="Medicine_MedicineIngredient" Member="Medicine" ThisKey="MedicineId" OtherKey="MedicineId" Type="Medicine" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Patient" Member="Patients">
+    <Type Name="Patient">
+      <Column Name="PatientId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PrescriberId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="NChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Type="System.String" DbType="NChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Gender" Type="System.Char" DbType="NChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="BirthDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="SSN" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Address" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="City" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="State" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Zip" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Phone" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="Allergies" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Diagnosis" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="InsuranceCarrierId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="InsuranceCarrierIdNumber" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="InsuranceGroupNumber" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="RxBin" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="RxPcn" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="InsurancePhone" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentType" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="Patient_Prescription" Member="Prescriptions" ThisKey="PatientId" OtherKey="PatientId" Type="Prescription" />
+      <Association Name="InsuranceCarrier_Patient" Member="InsuranceCarrier" ThisKey="InsuranceCarrierId" OtherKey="InsuranceCarrierId" Type="InsuranceCarrier" IsForeignKey="true" />
+      <Association Name="Prescriber_Patient" Member="Prescriber" ThisKey="PrescriberId" OtherKey="PrescriberId" Type="Prescriber" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PresciptionRefill" Member="PresciptionRefills">
+    <Type Name="PresciptionRefill">
+      <Column Name="PrescriptionRefillId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PrescriptionId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RefillQuantityId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RefillAmountId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="RefillQuantity_PresciptionRefill" Member="RefillQuantity" ThisKey="RefillQuantityId" OtherKey="RefillQuantityId" Type="RefillQuantity" IsForeignKey="true" />
+      <Association Name="Prescription_PresciptionRefill" Member="Prescription" ThisKey="PrescriptionId" OtherKey="PrescriptionId" Type="Prescription" IsForeignKey="true" />
+      <Association Name="RefillAmount_PresciptionRefill" Member="RefillAmount" ThisKey="RefillAmountId" OtherKey="RefillAmountId" Type="RefillAmount" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Prescriber" Member="Prescribers">
+    <Type Name="Prescriber">
+      <Column Name="PrescriberId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AccountId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="NChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Type="System.String" DbType="NChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="NpiNumber" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="LicenseNumber" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="DeaNumber" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Address" Type="System.String" DbType="NVarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="City" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="State" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Zip" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Phone" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Fax" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Prescriber_Patient" Member="Patients" ThisKey="PrescriberId" OtherKey="PrescriberId" Type="Patient" />
+      <Association Name="Prescriber_Prescription" Member="Prescriptions" ThisKey="PrescriberId" OtherKey="PrescriberId" Type="Prescription" />
+      <Association Name="Account_Prescriber" Member="Account" ThisKey="AccountId" OtherKey="AccountId" Type="Account" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Prescription" Member="Prescriptions">
+    <Type Name="Prescription">
+      <Column Name="PrescriptionId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PrescriberId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PatientId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Created" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Association Name="Prescription_PresciptionRefill" Member="PresciptionRefills" ThisKey="PrescriptionId" OtherKey="PrescriptionId" Type="PresciptionRefill" />
+      <Association Name="Prescription_PrescriptionMedicine" Member="PrescriptionMedicines" ThisKey="PrescriptionId" OtherKey="PrescriptionId" Type="PrescriptionMedicine" />
+      <Association Name="Patient_Prescription" Member="Patient" ThisKey="PatientId" OtherKey="PatientId" Type="Patient" IsForeignKey="true" />
+      <Association Name="Prescriber_Prescription" Member="Prescriber" ThisKey="PrescriberId" OtherKey="PrescriberId" Type="Prescriber" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PrescriptionMedicine" Member="PrescriptionMedicines">
+    <Type Name="PrescriptionMedicine">
+      <Column Name="PrescriptionMedicineId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MedicineId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PrescriptionId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="PrescriptionMedicine_PrescriptionMedicineIngredient" Member="PrescriptionMedicineIngredients" ThisKey="PrescriptionMedicineId" OtherKey="PrescriptionMedicineId" Type="PrescriptionMedicineIngredient" />
+      <Association Name="Prescription_PrescriptionMedicine" Member="Prescription" ThisKey="PrescriptionId" OtherKey="PrescriptionId" Type="Prescription" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PrescriptionMedicineIngredient" Member="PrescriptionMedicineIngredients">
+    <Type Name="PrescriptionMedicineIngredient">
+      <Column Name="PrescriptionMedicineIngredientId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IngredientId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PrescriptionMedicineId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Percentage" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Association Name="Ingredient_PrescriptionMedicineIngredient" Member="Ingredient" ThisKey="IngredientId" OtherKey="IngredientId" Type="Ingredient" IsForeignKey="true" />
+      <Association Name="PrescriptionMedicine_PrescriptionMedicineIngredient" Member="PrescriptionMedicine" ThisKey="PrescriptionMedicineId" OtherKey="PrescriptionMedicineId" Type="PrescriptionMedicine" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.RefillAmount" Member="RefillAmounts">
+    <Type Name="RefillAmount">
+      <Column Name="RefillAmountId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Amount" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="RefillAmount_PresciptionRefill" Member="PresciptionRefills" ThisKey="RefillAmountId" OtherKey="RefillAmountId" Type="PresciptionRefill" />
+    </Type>
+  </Table>
+</Database>
