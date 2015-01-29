@@ -12,6 +12,8 @@ namespace TriCareAPI.Models
         public PrescriberModel Prescriber;
         public PatientModel Patient;
         public DateTime Created;
+        public DateTime LastUpdate;
+        public string Location;
         public MedicineModelForPrescription Medicine;
         public RefillModel Refill;
     }

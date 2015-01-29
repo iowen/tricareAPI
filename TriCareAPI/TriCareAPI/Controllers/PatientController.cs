@@ -49,6 +49,15 @@ namespace TriCareAPI.Controllers
             var json = new JavaScriptSerializer().Serialize(result);
             return json;
         }
+        public string Put([FromBody]string value)
+        {
+            var result = new JavaScriptSerializer().Deserialize<Patient>(value);
+            var util = new PatientUtil(new TriCareDataDataContext());
+             util.UpdatePatient(result);
+             var outPut = "success";
+            var json = new JavaScriptSerializer().Serialize(outPut);
+            return json;
+        }
 
         // DELETE api/values/5
         public void Delete(int id)

@@ -40,6 +40,17 @@ namespace TriCareAPI.Utilities
             }
         }
 
+        public List<Prescription> GetPrescriptionsByPrescriber(int prescriberId, DateTime lastSync)
+        {
+            try
+            {
+                return db.Prescriptions.Where(a => a.PrescriberId == prescriberId && a.LastUpdate > lastSync).ToList();
+            }
+            catch (Exception ex)
+            {
+                return new List<Prescription>();
+            }
+        }
         public Prescription GetPrescription(int id)
         {
             try
@@ -51,10 +62,71 @@ namespace TriCareAPI.Utilities
                 return new Prescription();
             }
         }
-
+        public void UpdatePrescriptionLocation(string location, int id)
+        {
+            var presc = db.Prescriptions.First(a => a.PrescriptionId == id);
+            presc.Location = location;
+            db.SubmitChanges();
+        }
+        public CreatePrescriptionModel CreatePrescriptionFromModel(CreatePrescriptionModel item)
+        {
+            var output = item;
+            var time = DateTime.Now;
+            var p = new Prescription
+            {
+                PrescriberId = item.PrescriberId,
+                PatientId = item.PatientId,
+                Created = time,
+                LastUpdate = time,
+                Location = item.Location
+            };
+            db.Prescriptions.InsertOnSubmit(p);
+            db.SubmitChanges();
+            var prescriber = db.Prescribers.First(a => a.PrescriberId == p.PrescriberId);
+            prescriber.LastUpdate = p.LastUpdate;
+            db.SubmitChanges();
+            output.PrescriptionId = p.PrescriptionId;
+            output.Created = p.Created;
+            var pm = new PrescriptionMedicine
+            {
+                MedicineId = item.MedicineId,
+                PrescriptionId = p.PrescriptionId,
+            };
+            db.PrescriptionMedicines.InsertOnSubmit(pm);
+            db.SubmitChanges();
+            output.PrescriptionMedicineId = pm.PrescriptionMedicineId;
+            int count = 0;
+            foreach (var i in item.Ingredients)
+            {
+                var mi = new PrescriptionMedicineIngredient
+                {
+                    IngredientId = i.IngredientId,
+                    Percentage = i.Percentage,
+                    PrescriptionMedicineId = pm.PrescriptionMedicineId
+                };
+                db.PrescriptionMedicineIngredients.InsertOnSubmit(mi);
+                db.SubmitChanges();
+                output.Ingredients[count].PrescriptionMedicineIngredientId = mi.PrescriptionMedicineIngredientId;
+                count++;
+            }
+            var pr = new PresciptionRefill
+            {
+                PrescriptionId = p.PrescriptionId,
+                RefillAmountId = item.RefillAmount,
+                RefillQuantityId = item.RefillQuantity
+            };
+            
+            db.PresciptionRefills.InsertOnSubmit(pr);
+            db.SubmitChanges();
+            output.PrescriptionRefillId = pr.PrescriptionRefillId;
+            return output;
+        }
         public int CreatePrescription(Prescription item)
         {
             db.Prescriptions.InsertOnSubmit(item);
+            db.SubmitChanges();
+            var prescriber = db.Prescribers.First(a => a.PrescriberId == item.PrescriberId);
+            prescriber.LastUpdate = item.LastUpdate;
             db.SubmitChanges();
             return item.PrescriptionId;
         }
@@ -108,9 +180,15 @@ namespace TriCareAPI.Utilities
 
             var patUtil = new PatientUtil(new TriCareDataDataContext());
             var presUtil = new PrescriberUtil(new TriCareDataDataContext());
+            var pmUtil = new PrescriptionMedicineUtil(new TriCareDataDataContext());
             var pat = patUtil.ConvertToModel(item.Patient);
             var pres = presUtil.ConvertToModel(item.Prescriber);
-            return new PrescriptionModel() { PrescriptionId = item.PrescriptionId, Created = item.Created, Patient = pat, Prescriber = pres };
+            var pml = item.PrescriptionMedicines.First();
+            var pm = pmUtil.ConvertToMedicineModel(pml);
+            var ra = new RefillAmountModel() { RefillAmountId = item.PresciptionRefills.First().RefillAmount.RefillAmountId, Amount = item.PresciptionRefills.First().RefillAmount.Amount };
+            var rq = new RefillQuantityModel() { RefillQuantityId = item.PresciptionRefills.First().RefillQuantity.RefillQuantityId, Quantity = item.PresciptionRefills.First().RefillQuantity.Quantity };
+            var rm = new RefillModel() { Amount = ra, Quantity = rq, PrescriptionId = item.PrescriptionId, PrescriptionRefillId = item.PresciptionRefills.First().PrescriptionRefillId };
+            return new PrescriptionModel() { PrescriptionId = item.PrescriptionId, Created = item.Created, Patient = pat, Prescriber = pres, Medicine = pm, Refill = rm, LastUpdate = item.LastUpdate, Location = item.Location };
         }
 
         public PrescriptionMedicineModel ConvertToModelWithMedicine(Prescription item)
@@ -127,8 +205,9 @@ namespace TriCareAPI.Utilities
             var pat = patUtil.ConvertToModel(item.Patient);
             var pres = presUtil.ConvertToModel(item.Prescriber);
             var med = medUtil.GetMedicine(item.PrescriptionMedicines.First().MedicineId);
-            var refillInfo = new RefillModel() { Amount = refUtil.ConvertToAmountModel(item.PresciptionRefills.First().RefillAmount), Quantity = refUtil.ConvertToQuantityModel(item.PresciptionRefills.First().RefillQuantity) };
-            return new PrescriptionMedicineModel() {Refill= refillInfo, MedicineName =med.Name, Ingredients = ing, PrescriptionId = item.PrescriptionId, Created = item.Created, Patient = pat, Prescriber = pres };
+         //   AppDataUpdate
+            var refillInfo = new RefillModel() { Amount = refUtil.ConvertToAmountModel(item.PresciptionRefills.First().RefillAmount), Quantity = refUtil.ConvertToQuantityModel(item.PresciptionRefills.First().RefillQuantity),PrescriptionId = item.PrescriptionId, PrescriptionRefillId = item.PresciptionRefills.First().PrescriptionRefillId };
+            return new PrescriptionMedicineModel() {Refill= refillInfo, MedicineName =med.Name, Ingredients = ing, PrescriptionId = item.PrescriptionId, Created = item.Created, Patient = pat, Prescriber = pres ,LastUpdate = item.LastUpdate, Location = item.Location, MedicineId = item.PrescriptionMedicines.First().MedicineId };
         }
     
 

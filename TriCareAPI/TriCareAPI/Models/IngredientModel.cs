@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TriCareAPI.Models
 {
-    class IngredientModel
+    public class IngredientModel
     {
         public int IngredientId;
         public string Name;

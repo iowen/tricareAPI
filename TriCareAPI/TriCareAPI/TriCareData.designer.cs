@@ -36,6 +36,9 @@ namespace TriCareAPI
     partial void InsertRefillQuantity(RefillQuantity instance);
     partial void UpdateRefillQuantity(RefillQuantity instance);
     partial void DeleteRefillQuantity(RefillQuantity instance);
+    partial void InsertAppDataUpdate(AppDataUpdate instance);
+    partial void UpdateAppDataUpdate(AppDataUpdate instance);
+    partial void DeleteAppDataUpdate(AppDataUpdate instance);
     partial void InsertIngredient(Ingredient instance);
     partial void UpdateIngredient(Ingredient instance);
     partial void DeleteIngredient(Ingredient instance);
@@ -114,6 +117,14 @@ namespace TriCareAPI
 			get
 			{
 				return this.GetTable<RefillQuantity>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AppDataUpdate> AppDataUpdates
+		{
+			get
+			{
+				return this.GetTable<AppDataUpdate>();
 			}
 		}
 		
@@ -407,6 +418,92 @@ namespace TriCareAPI
 		{
 			this.SendPropertyChanging();
 			entity.RefillQuantity = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AppDataUpdate")]
+	public partial class AppDataUpdate : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _AppDataUpdateId;
+		
+		private System.DateTime _LastUpdate;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnAppDataUpdateIdChanging(int value);
+    partial void OnAppDataUpdateIdChanged();
+    partial void OnLastUpdateChanging(System.DateTime value);
+    partial void OnLastUpdateChanged();
+    #endregion
+		
+		public AppDataUpdate()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AppDataUpdateId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int AppDataUpdateId
+		{
+			get
+			{
+				return this._AppDataUpdateId;
+			}
+			set
+			{
+				if ((this._AppDataUpdateId != value))
+				{
+					this.OnAppDataUpdateIdChanging(value);
+					this.SendPropertyChanging();
+					this._AppDataUpdateId = value;
+					this.SendPropertyChanged("AppDataUpdateId");
+					this.OnAppDataUpdateIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastUpdate", DbType="DateTime2 NOT NULL")]
+		public System.DateTime LastUpdate
+		{
+			get
+			{
+				return this._LastUpdate;
+			}
+			set
+			{
+				if ((this._LastUpdate != value))
+				{
+					this.OnLastUpdateChanging(value);
+					this.SendPropertyChanging();
+					this._LastUpdate = value;
+					this.SendPropertyChanged("LastUpdate");
+					this.OnLastUpdateChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 	
@@ -1010,7 +1107,7 @@ namespace TriCareAPI
 		
 		private string _LastName;
 		
-		private char _Gender;
+		private string _Gender;
 		
 		private System.DateTime _BirthDate;
 		
@@ -1024,7 +1121,7 @@ namespace TriCareAPI
 		
 		private int _Zip;
 		
-		private int _Phone;
+		private string _Phone;
 		
 		private string _Email;
 		
@@ -1046,6 +1143,8 @@ namespace TriCareAPI
 		
 		private string _PaymentType;
 		
+		private System.DateTime _LastUpdate;
+		
 		private EntitySet<Prescription> _Prescriptions;
 		
 		private EntityRef<InsuranceCarrier> _InsuranceCarrier;
@@ -1064,7 +1163,7 @@ namespace TriCareAPI
     partial void OnFirstNameChanged();
     partial void OnLastNameChanging(string value);
     partial void OnLastNameChanged();
-    partial void OnGenderChanging(char value);
+    partial void OnGenderChanging(string value);
     partial void OnGenderChanged();
     partial void OnBirthDateChanging(System.DateTime value);
     partial void OnBirthDateChanged();
@@ -1078,7 +1177,7 @@ namespace TriCareAPI
     partial void OnStateChanged();
     partial void OnZipChanging(int value);
     partial void OnZipChanged();
-    partial void OnPhoneChanging(int value);
+    partial void OnPhoneChanging(string value);
     partial void OnPhoneChanged();
     partial void OnEmailChanging(string value);
     partial void OnEmailChanged();
@@ -1100,6 +1199,8 @@ namespace TriCareAPI
     partial void OnInsurancePhoneChanged();
     partial void OnPaymentTypeChanging(string value);
     partial void OnPaymentTypeChanged();
+    partial void OnLastUpdateChanging(System.DateTime value);
+    partial void OnLastUpdateChanged();
     #endregion
 		
 		public Patient()
@@ -1194,8 +1295,8 @@ namespace TriCareAPI
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Gender", DbType="NChar(1) NOT NULL")]
-		public char Gender
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Gender", DbType="NChar(10) NOT NULL", CanBeNull=false)]
+		public string Gender
 		{
 			get
 			{
@@ -1334,8 +1435,8 @@ namespace TriCareAPI
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Phone", DbType="Int NOT NULL")]
-		public int Phone
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Phone", DbType="NChar(10) NOT NULL", CanBeNull=false)]
+		public string Phone
 		{
 			get
 			{
@@ -1554,6 +1655,26 @@ namespace TriCareAPI
 					this._PaymentType = value;
 					this.SendPropertyChanged("PaymentType");
 					this.OnPaymentTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastUpdate", DbType="DateTime2 NOT NULL")]
+		public System.DateTime LastUpdate
+		{
+			get
+			{
+				return this._LastUpdate;
+			}
+			set
+			{
+				if ((this._LastUpdate != value))
+				{
+					this.OnLastUpdateChanging(value);
+					this.SendPropertyChanging();
+					this._LastUpdate = value;
+					this.SendPropertyChanged("LastUpdate");
+					this.OnLastUpdateChanged();
 				}
 			}
 		}
@@ -1965,6 +2086,8 @@ namespace TriCareAPI
 		
 		private string _Password;
 		
+		private System.DateTime _LastUpdate;
+		
 		private EntitySet<Patient> _Patients;
 		
 		private EntitySet<Prescription> _Prescriptions;
@@ -2005,6 +2128,8 @@ namespace TriCareAPI
     partial void OnEmailChanged();
     partial void OnPasswordChanging(string value);
     partial void OnPasswordChanged();
+    partial void OnLastUpdateChanging(System.DateTime value);
+    partial void OnLastUpdateChanged();
     #endregion
 		
 		public Prescriber()
@@ -2319,6 +2444,26 @@ namespace TriCareAPI
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastUpdate", DbType="DateTime2 NOT NULL")]
+		public System.DateTime LastUpdate
+		{
+			get
+			{
+				return this._LastUpdate;
+			}
+			set
+			{
+				if ((this._LastUpdate != value))
+				{
+					this.OnLastUpdateChanging(value);
+					this.SendPropertyChanging();
+					this._LastUpdate = value;
+					this.SendPropertyChanged("LastUpdate");
+					this.OnLastUpdateChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Prescriber_Patient", Storage="_Patients", ThisKey="PrescriberId", OtherKey="PrescriberId")]
 		public EntitySet<Patient> Patients
 		{
@@ -2438,6 +2583,10 @@ namespace TriCareAPI
 		
 		private System.DateTime _Created;
 		
+		private string _Location;
+		
+		private System.DateTime _LastUpdate;
+		
 		private EntitySet<PresciptionRefill> _PresciptionRefills;
 		
 		private EntitySet<PrescriptionMedicine> _PrescriptionMedicines;
@@ -2458,6 +2607,10 @@ namespace TriCareAPI
     partial void OnPatientIdChanged();
     partial void OnCreatedChanging(System.DateTime value);
     partial void OnCreatedChanged();
+    partial void OnLocationChanging(string value);
+    partial void OnLocationChanged();
+    partial void OnLastUpdateChanging(System.DateTime value);
+    partial void OnLastUpdateChanged();
     #endregion
 		
 		public Prescription()
@@ -2553,6 +2706,46 @@ namespace TriCareAPI
 					this._Created = value;
 					this.SendPropertyChanged("Created");
 					this.OnCreatedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Location", DbType="NVarChar(200)")]
+		public string Location
+		{
+			get
+			{
+				return this._Location;
+			}
+			set
+			{
+				if ((this._Location != value))
+				{
+					this.OnLocationChanging(value);
+					this.SendPropertyChanging();
+					this._Location = value;
+					this.SendPropertyChanged("Location");
+					this.OnLocationChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastUpdate", DbType="DateTime2 NOT NULL")]
+		public System.DateTime LastUpdate
+		{
+			get
+			{
+				return this._LastUpdate;
+			}
+			set
+			{
+				if ((this._LastUpdate != value))
+				{
+					this.OnLastUpdateChanging(value);
+					this.SendPropertyChanging();
+					this._LastUpdate = value;
+					this.SendPropertyChanged("LastUpdate");
+					this.OnLastUpdateChanged();
 				}
 			}
 		}

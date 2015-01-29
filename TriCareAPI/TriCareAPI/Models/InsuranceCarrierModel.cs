@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TriCareAPI.Models
 {
-    class InsuranceCarrierModel
+    public class InsuranceCarrierModel
     {
         public int InsuranceCarrierId;
         public string Name;

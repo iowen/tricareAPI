@@ -58,6 +58,7 @@ c:\users\iowen\documents\visual studio 2013\Projects\TriCareAPI\TriCareAPI\bin\M
 c:\users\iowen\documents\visual studio 2013\Projects\TriCareAPI\TriCareAPI\bin\Microsoft.Owin.Security.Twitter.xml
 c:\users\iowen\documents\visual studio 2013\Projects\TriCareAPI\TriCareAPI\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 c:\users\iowen\documents\visual studio 2013\Projects\TriCareAPI\TriCareAPI\bin\System.Web.Http.Owin.xml
-c:\users\iowen\documents\visual studio 2013\Projects\TriCareAPI\TriCareAPI\obj\Debug\TriCareAPI.csprojResolveAssemblyReference.cache
 c:\users\iowen\documents\visual studio 2013\Projects\TriCareAPI\TriCareAPI\obj\Debug\TriCareAPI.dll
 c:\users\iowen\documents\visual studio 2013\Projects\TriCareAPI\TriCareAPI\obj\Debug\TriCareAPI.pdb
+C:\Users\iowen\documents\visual studio 2013\Projects\TriCareAPI\TriCareAPI\bin\itextsharp.dll
+C:\Users\iowen\documents\visual studio 2013\Projects\TriCareAPI\TriCareAPI\bin\itextsharp.xml

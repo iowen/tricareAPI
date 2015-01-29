@@ -16,7 +16,7 @@ namespace TriCareAPI.Models
 
         public string LastName;
 
-        public char Gender;
+        public string Gender;
 
         public System.DateTime BirthDate;
 
@@ -30,7 +30,7 @@ namespace TriCareAPI.Models
 
         public int Zip;
 
-        public int Phone;
+        public string Phone;
 
         public string Email;
 
@@ -53,6 +53,8 @@ namespace TriCareAPI.Models
         public string InsurancePhone;
 
         public string PaymentType;
+
+        public DateTime LastUpdate;
 		
     }
 }

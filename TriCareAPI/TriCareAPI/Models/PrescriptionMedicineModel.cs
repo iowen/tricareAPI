@@ -11,6 +11,8 @@ namespace TriCareAPI.Models
         public int PrescriptionId;
         public RefillAmountModel Amount;
         public RefillQuantityModel Quantity;
+        public int PrescriptionRefillId;
+
     }
 
     public class RefillAmountModel
@@ -38,9 +40,31 @@ namespace TriCareAPI.Models
         public PatientModel Patient;
         public DateTime Created;
         public string MedicineName;
+        public string Location;
+        public DateTime LastUpdate;
         public int MedicineId;
         public List<PrescriptionMedicineIngredientModel> Ingredients;
         public RefillModel Refill;
+    }
+    public class MedcineIngredientForPrescriptionModel
+    {
+        public int IngredientId;
+        public int PrescriptionMedicineIngredientId;
+        public double Percentage;
+    }
+    public class CreatePrescriptionModel
+    {
+        public int PrescriptionId;
+        public int PrescriberId;
+        public int PatientId;
+        public int MedicineId;
+        public int PrescriptionMedicineId;
+        public DateTime Created;
+        public List<MedcineIngredientForPrescriptionModel> Ingredients;
+        public int RefillAmount;
+        public int RefillQuantity;
+        public string Location;
+        public int PrescriptionRefillId;
     }
 
 }

@@ -43,8 +43,14 @@ namespace TriCareAPI.Controllers
         }
 
         // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
+        public string Put([FromBody]string value)
         {
+            var result = new JavaScriptSerializer().Deserialize<Prescriber>(value);
+            var util = new PrescriberUtil(new TriCareDataDataContext());
+             util.UpdatePrescriber(result);
+             var outPut = "Success";
+            var json = JsonConvert.SerializeObject(outPut);
+            return json;
         }
 
         // DELETE api/values/5

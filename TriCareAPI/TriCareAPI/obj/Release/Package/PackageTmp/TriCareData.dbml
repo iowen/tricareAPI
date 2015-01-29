@@ -13,6 +13,12 @@
       <Association Name="RefillQuantity_PresciptionRefill" Member="PresciptionRefills" ThisKey="RefillQuantityId" OtherKey="RefillQuantityId" Type="PresciptionRefill" />
     </Type>
   </Table>
+  <Table Name="dbo.AppDataUpdate" Member="AppDataUpdates">
+    <Type Name="AppDataUpdate">
+      <Column Name="AppDataUpdateId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LastUpdate" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
   <Table Name="dbo.Ingredient" Member="Ingredients">
     <Type Name="Ingredient">
       <Column Name="IngredientId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -51,14 +57,14 @@
       <Column Name="PrescriberId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="FirstName" Type="System.String" DbType="NChar(30) NOT NULL" CanBeNull="false" />
       <Column Name="LastName" Type="System.String" DbType="NChar(30) NOT NULL" CanBeNull="false" />
-      <Column Name="Gender" Type="System.Char" DbType="NChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="Gender" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
       <Column Name="BirthDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
       <Column Name="SSN" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Address" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="City" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="State" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="Zip" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Phone" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Phone" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
       <Column Name="Email" Type="System.String" DbType="NVarChar(200) NOT NULL" CanBeNull="false" />
       <Column Name="Allergies" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="Diagnosis" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
@@ -69,6 +75,7 @@
       <Column Name="RxPcn" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="InsurancePhone" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
       <Column Name="PaymentType" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="LastUpdate" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
       <Association Name="Patient_Prescription" Member="Prescriptions" ThisKey="PatientId" OtherKey="PatientId" Type="Prescription" />
       <Association Name="InsuranceCarrier_Patient" Member="InsuranceCarrier" ThisKey="InsuranceCarrierId" OtherKey="InsuranceCarrierId" Type="InsuranceCarrier" IsForeignKey="true" />
       <Association Name="Prescriber_Patient" Member="Prescriber" ThisKey="PrescriberId" OtherKey="PrescriberId" Type="Prescriber" IsForeignKey="true" />
@@ -102,6 +109,7 @@
       <Column Name="Fax" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
       <Column Name="Email" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="Password" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="LastUpdate" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
       <Association Name="Prescriber_Patient" Member="Patients" ThisKey="PrescriberId" OtherKey="PrescriberId" Type="Patient" />
       <Association Name="Prescriber_Prescription" Member="Prescriptions" ThisKey="PrescriberId" OtherKey="PrescriberId" Type="Prescription" />
       <Association Name="Account_Prescriber" Member="Account" ThisKey="AccountId" OtherKey="AccountId" Type="Account" IsForeignKey="true" />
@@ -113,6 +121,8 @@
       <Column Name="PrescriberId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="PatientId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Created" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Column Name="Location" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="LastUpdate" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
       <Association Name="Prescription_PresciptionRefill" Member="PresciptionRefills" ThisKey="PrescriptionId" OtherKey="PrescriptionId" Type="PresciptionRefill" />
       <Association Name="Prescription_PrescriptionMedicine" Member="PrescriptionMedicines" ThisKey="PrescriptionId" OtherKey="PrescriptionId" Type="PrescriptionMedicine" />
       <Association Name="Patient_Prescription" Member="Patient" ThisKey="PatientId" OtherKey="PatientId" Type="Patient" IsForeignKey="true" />
