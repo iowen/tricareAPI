@@ -7,8 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Script.Serialization;
 using TriCareAPI.Models;
@@ -16,7 +18,7 @@ using TriCareAPI.Utilities;
 
 namespace TriCareAPI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class PrescriptionMedicineController : ApiController
     {
         // GET api/values
@@ -53,9 +55,10 @@ namespace TriCareAPI.Controllers
                      
                     CreatePdf(pdfName, outPut, fPath);
                     util.UpdatePrescriptionLocation("Uploads/"+nameFriendly, outPut.PrescriptionId);
+                    var pres = util.GetPrescription(outPut.PrescriptionId);
                     outPut.Location = "Uploads/"+nameFriendly;
                     var json = new JavaScriptSerializer().Serialize(outPut);
-                     SendFax(pdfName, outPut.PrescriptionId);
+                     SendEmailAndFax(pdfName, outPut);
                     return json;
             }
                 catch (Exception e )
@@ -97,58 +100,76 @@ namespace TriCareAPI.Controllers
         {
             var presRepo = new PrescriptionUtil(new TriCareDataDataContext());
             var pres = presRepo.GetPrescription(model.PrescriptionId);
-            var doc = new Document(new Rectangle(306, 378));
-            var output = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
-            var writer = PdfWriter.GetInstance(doc, output);
-            doc.Open();
-            doc.SetMargins(0, 0, 0, 0);
-            var DrNameFont = FontFactory.GetFont("Times", 10, Font.BOLD);
-            var bodyFont = FontFactory.GetFont("Times", 9, Font.NORMAL);
-            var dName = new Paragraph(pres.Prescriber.FirstName.Trim() + " " + pres.Prescriber.LastName.Trim(), DrNameFont);
-            dName.Alignment = Element.ALIGN_CENTER;
-            doc.Add(dName);
-            var ldea = new Paragraph("LIC #: " + pres.Prescriber.LicenseNumber.Trim() + " - DEA#: " + pres.Prescriber.DeaNumber.Trim() + "\nNPI #: " + pres.Prescriber.NpiNumber.Trim() + "\n\n", bodyFont);
-            ldea.Alignment = Element.ALIGN_CENTER;
-            doc.Add(ldea);
+            ///
+            string pLoc = Path.Combine(HostingEnvironment.ApplicationPhysicalPath, "tricarePrescriptionTemplate.pdf");
+            var newFile = fileName;
+            PdfReader pRead = new PdfReader(pLoc);
+            var fstr = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
+            PdfStamper pdfStamper = new PdfStamper(pRead, fstr);
+            int fieldCount = 0;
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Created.ToString("d"));
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Prescriber.FirstName.Trim() + " " + pres.Prescriber.LastName.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Prescriber.LicenseNumber.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Prescriber.DeaNumber.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Prescriber.NpiNumber.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Prescriber.Address.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Prescriber.Phone.Trim().Insert(3,"-").Insert(7,"-"));
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Prescriber.City.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Prescriber.State.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Prescriber.Zip.ToString());
+            //Patient Info
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.FirstName.Trim() + " " + pres.Patient.LastName.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.SSN.ToString());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.BirthDate.ToString("d"));
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.Phone.Trim().Insert(3,"-").Insert(7,"-"));
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.Gender.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.Address.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.PaymentType.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.City.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.State.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.Zip.ToString());
+            //Insurance Info
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.InsuranceCarrier.Name.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.InsuranceCarrierIdNumber.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.InsurancePhone.Trim().Insert(3,"-").Insert(7,"-"));
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.InsuranceGroupNumber.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.RxBin.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.RxPcn.Trim());
 
-            var addr = new Paragraph(pres.Prescriber.Address.Trim() + " " + pres.Prescriber.City.Trim() + " , " + pres.Prescriber.State.Trim() + " " + pres.Prescriber.Zip.ToString().Trim() + "\nTel: " + pres.Prescriber.Phone.Trim() + " - Fax: " + pres.Prescriber.Fax.Trim(), bodyFont);
-            addr.Alignment = Element.ALIGN_CENTER;
-            doc.Add(addr);
-            PdfPTable table = new PdfPTable(3);
-            float[] widths = new float[] { 0.6f, 0.75f, 2f };
-            table.SetWidths(widths);
-            PdfPCell numeroCell = new PdfPCell(new Phrase("               "));
-            numeroCell.Border = 0;
-            numeroCell.BorderColorBottom = new BaseColor(System.Drawing.Color.Black);
-            numeroCell.BorderWidthBottom = 1f;
-            table.AddCell(numeroCell);
-            table.AddCell(numeroCell);
-            table.AddCell(numeroCell);
-            doc.Add(table);
             var mRepo = new MedicineUtil(new TriCareDataDataContext());
             var medItem = mRepo.GetMedicine(model.MedicineId);
-            var pat = new Paragraph("Patient : " + pres.Patient.FirstName.Trim() + " " + pres.Patient.LastName.Trim() + "                              DOB:" + pres.Patient.BirthDate.ToShortDateString() + "\nAddress: " + pres.Patient.Address.Trim() + " " + pres.Patient.City.Trim() + " , " + pres.Patient.State.Trim() + " " + pres.Patient.Zip.ToString().Trim() + "\n Date: " + pres.Created.ToShortDateString() + "\nInsurance Carrier: " + pres.Patient.InsuranceCarrier.Name.Trim() + "              Insurance Id: " + pres.Patient.InsuranceCarrierIdNumber.Trim() + "       Insurance Phone: " + pres.Patient.InsurancePhone.Trim(), bodyFont);
-            pat.Alignment = Element.ALIGN_CENTER;
-            doc.Add(pat);
+            string prq;
+            if(pres.PresciptionRefills.First().RefillQuantity.Quantity > 0)
+            {
+                prq = pres.PresciptionRefills.First().RefillQuantity.Quantity.ToString().Trim();
+            }
+            else{
+                if(pres.PresciptionRefills.First().RefillQuantity.Quantity == 0)
+                    prq = "NR";
+                else
+                    prq = "PRN";
+            }
 
-            var med = new Paragraph("Medicine : " + medItem.Name.Trim(), bodyFont);
-            med.Alignment = Element.ALIGN_CENTER;
-            doc.Add(med);
-
-            var refl = new Paragraph("Refill Amount (mg): " + pres.PresciptionRefills.First().RefillAmount.Amount.ToString().Trim() + "       Refill Quantity: " + pres.PresciptionRefills.First().RefillQuantity.Quantity.ToString().Trim(), bodyFont);
-            refl.Alignment = Element.ALIGN_CENTER;
-            doc.Add(refl);
-            doc.Add(new Paragraph(" ", DrNameFont));
-
+            //Medicine
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, medItem.Name.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.Allergies.Trim());
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.PresciptionRefills.First().RefillAmount.Amount.ToString().Trim()+" Grams");
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, pres.Patient.Diagnosis);
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, prq);
+            pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, medItem.Directions.Trim());
             var sig = iTextSharp.text.Image.GetInstance(signature);
             sig.ScaleAbsolute(30, 30);
-            sig.Alignment = Element.ALIGN_LEFT;
-            doc.Add(sig);
-            doc.SetPageSize(new Rectangle(306, 378));
+            sig.SetAbsolutePosition(60, 85);
 
-            doc.Close();
+
+            pdfStamper.GetOverContent(1).AddImage(sig);
+            pdfStamper.FormFlattening = true;
+
+
+            pdfStamper.Close();
         }
-        private long SendFax(string fileName, int prescriptionId)
+
+        private long SendEmailAndFax(string fileName, CreatePrescriptionModel prescription)
         {
             string username = "iowen8";
             string password = "Distime4da4";
@@ -164,13 +185,18 @@ namespace TriCareAPI.Controllers
             Array.Copy(file1data, data, file1data.Length);
             string fileTypes = System.IO.Path.GetExtension(path1).TrimStart('.');
             string fileSizes = file1data.Length.ToString();
-
-            DateTime postponeTime = DateTime.Now.AddMinutes(1);
+            var preRepo = new PrescriberUtil(new TriCareDataDataContext());
+            var patRepo = new PatientUtil(new TriCareDataDataContext());
+            var medRepo = new MedicineUtil(new TriCareDataDataContext());
+            var prec = preRepo.GetPrescriber(prescription.PrescriberId);
+            var pat = patRepo.GetPatient(prescription.PatientId);
+            var med = medRepo.GetMedicine(prescription.MedicineId);
+            DateTime postponeTime = DateTime.Now.AddSeconds(10);
             // in two hours. use any PAST time to send ASAP
             int retriesToPerform = 2;
             string csid = "My CSID";
-            string pageHeader = "To: Fertility Pharmacy From: Owen Watson Pages: 1";
-            string subject = "Prescription - "+ prescriptionId.ToString();
+            string pageHeader = "To: Fertility Pharmacy From:"+prec.FirstName.Trim()+" "+prec.LastName.Trim()+" Pages: 1";
+            string subject = "Prescription - TCA-"+ prescription.PrescriptionId.ToString();
             string replyAddress = "owat@1of1inc.com";
             string pageSize = "A4";
             string pageorientation = "Portrait";
@@ -182,7 +208,54 @@ namespace TriCareAPI.Controllers
             TriCareAPI.net.interfax.ws.InterFax ifws = new TriCareAPI.net.interfax.ws.InterFax();
             long st = ifws.SendfaxEx_2(username, password, faxNumbers, contacts, data, fileTypes, fileSizes, postponeTime, retriesToPerform, csid,
             pageHeader, "", subject, replyAddress, pageSize, pageorientation, isHighResolution, isFineRendering);
+            string fromPassword = "10f14lif3";
+            var eu = new EmailUtil();
+            try
+            {
+                using (MailMessage mail = new MailMessage("admin@tricarewellness.com", prec.Email.Trim()))
+                {
+                    using (SmtpClient client = new SmtpClient())
+                    {
+                        client.Port = 80;
+                        client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        client.UseDefaultCredentials = false;
+                        client.Credentials = new NetworkCredential("admin@tricarewellness.com", fromPassword);
+                        client.Host = "smtpout.secureserver.net";
+                        mail.Subject = "Prescription Completed";
+                        mail.IsBodyHtml = true;
+                        mail.Body = eu.GetPrescriptionEmail(prec.FirstName.Trim(), prec.LastName.Trim(), pat.FirstName.Trim() + " " + pat.LastName.Trim(), med.Name.Trim());
+                        mail.Attachments.Add(new Attachment(fileName));
+                        client.Send(mail);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
 
+            }
+            try
+            {
+                using (MailMessage mail = new MailMessage("admin@tricarewellness.com", "owen1.watson@gmail.com"))
+                {
+                    using (SmtpClient client = new SmtpClient())
+                    {
+                        client.Port = 80;
+                        client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        client.UseDefaultCredentials = false;
+                        client.Credentials = new NetworkCredential("admin@tricarewellness.com", fromPassword);
+                        client.Host = "smtpout.secureserver.net";
+                        mail.Subject = "Prescription Completed";
+                        mail.IsBodyHtml = true;
+                        mail.Body = eu.GetPrescriptionEmail(prec.FirstName.Trim(), prec.LastName.Trim(), pat.FirstName.Trim() + " " + pat.LastName.Trim(), med.Name.Trim());
+                        mail.Attachments.Add(new Attachment(fileName));
+                        client.Send(mail);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
             return st;
         }
     }

@@ -207,7 +207,7 @@ namespace TriCareAPI.Utilities
             var med = medUtil.GetMedicine(item.PrescriptionMedicines.First().MedicineId);
          //   AppDataUpdate
             var refillInfo = new RefillModel() { Amount = refUtil.ConvertToAmountModel(item.PresciptionRefills.First().RefillAmount), Quantity = refUtil.ConvertToQuantityModel(item.PresciptionRefills.First().RefillQuantity),PrescriptionId = item.PrescriptionId, PrescriptionRefillId = item.PresciptionRefills.First().PrescriptionRefillId };
-            return new PrescriptionMedicineModel() {Refill= refillInfo, MedicineName =med.Name, Ingredients = ing, PrescriptionId = item.PrescriptionId, Created = item.Created, Patient = pat, Prescriber = pres ,LastUpdate = item.LastUpdate, Location = item.Location, MedicineId = item.PrescriptionMedicines.First().MedicineId };
+            return new PrescriptionMedicineModel() {Refill= refillInfo, MedicineName =med.Name, Ingredients = ing, PrescriptionId = item.PrescriptionId, Created = item.Created, Patient = pat, Prescriber = pres ,LastUpdate = item.LastUpdate, Location = item.Location, MedicineId = item.PrescriptionMedicines.First().MedicineId, Directions = med.Directions.Trim() };
         }
     
 

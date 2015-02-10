@@ -40,6 +40,17 @@ namespace TriCareAPI.Utilities
             }
         }
 
+        public Prescriber GetPrescriberByEmail(string email)
+        {
+            try
+            {
+                return db.Prescribers.First(a => a.Email.ToLower().Trim() == email.ToLower().Trim());
+            }
+            catch (Exception ex)
+            {
+                return new Prescriber();
+            }
+        }
         public Prescriber GetPrescriber(int id, DateTime lastUpdate)
         {
             try
@@ -59,6 +70,9 @@ namespace TriCareAPI.Utilities
             var acc = new Account();
             db.Accounts.InsertOnSubmit(acc);
             db.SubmitChanges();
+            var encrypter = new Encrypter();
+            var pwd = encrypter.GetEncryption(item.Password.Trim());
+            item.Password = pwd;
             item.LastUpdate = DateTime.Now;
             item.AccountId = acc.AccountId;
             db.Prescribers.InsertOnSubmit(item);
@@ -105,7 +119,9 @@ namespace TriCareAPI.Utilities
         {
             try
             {
-                return db.Prescribers.First(a => a.Email == model.Email && a.Password == model.Password);
+                var encrypter = new Encrypter();
+                var pwd = encrypter.GetEncryption(model.Password.Trim());
+                return db.Prescribers.First(a => a.Email == model.Email && a.Password == pwd);
             }
             catch (Exception ex)
             {

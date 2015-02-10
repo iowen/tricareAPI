@@ -6,8 +6,10 @@ using System.Web.Mvc;
 
 namespace TriCareAPI.Controllers
 {
+    
     public class HomeController : Controller
     {
+        [AllowAnonymous]
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";

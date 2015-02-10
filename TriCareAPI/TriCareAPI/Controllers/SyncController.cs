@@ -10,6 +10,7 @@ using TriCareAPI.Utilities;
 
 namespace TriCareAPI.Controllers
 {
+    [Authorize]
     public class SyncController : ApiController
     {
         // GET api/values

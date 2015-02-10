@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace TriCareAPI.Controllers
 {
+    [Authorize]
     public class UploadSignatureController : ApiController
     {
         public class CustomMultipartFormDataStreamProvider : MultipartFormDataStreamProvider

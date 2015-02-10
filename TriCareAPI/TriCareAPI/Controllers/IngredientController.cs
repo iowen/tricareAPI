@@ -9,7 +9,7 @@ using TriCareAPI.Utilities;
 
 namespace TriCareAPI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class IngredientController : ApiController
     {
         // GET api/values

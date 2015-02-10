@@ -9,7 +9,7 @@ using TriCareAPI.Utilities;
 
 namespace TriCareAPI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class InsuranceCarrierController : ApiController
     {
         // GET api/values

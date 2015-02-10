@@ -30,6 +30,7 @@ namespace TriCareAPI.Models
         public int PrescriptionId;
         public string MedicineName;
         public int MedicineId;
+        public string Directions;
         public List<PrescriptionMedicineIngredientModel> Ingredients;
     }
 
@@ -40,6 +41,7 @@ namespace TriCareAPI.Models
         public PatientModel Patient;
         public DateTime Created;
         public string MedicineName;
+        public string Directions;
         public string Location;
         public DateTime LastUpdate;
         public int MedicineId;

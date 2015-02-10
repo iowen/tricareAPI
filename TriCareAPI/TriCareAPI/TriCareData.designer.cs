@@ -48,6 +48,9 @@ namespace TriCareAPI
     partial void InsertMedicine(Medicine instance);
     partial void UpdateMedicine(Medicine instance);
     partial void DeleteMedicine(Medicine instance);
+    partial void InsertMedicineCategory(MedicineCategory instance);
+    partial void UpdateMedicineCategory(MedicineCategory instance);
+    partial void DeleteMedicineCategory(MedicineCategory instance);
     partial void InsertMedicineIngredient(MedicineIngredient instance);
     partial void UpdateMedicineIngredient(MedicineIngredient instance);
     partial void DeleteMedicineIngredient(MedicineIngredient instance);
@@ -149,6 +152,14 @@ namespace TriCareAPI
 			get
 			{
 				return this.GetTable<Medicine>();
+			}
+		}
+		
+		public System.Data.Linq.Table<MedicineCategory> MedicineCategories
+		{
+			get
+			{
+				return this.GetTable<MedicineCategory>();
 			}
 		}
 		
@@ -773,7 +784,15 @@ namespace TriCareAPI
 		
 		private string _Name;
 		
+		private string _Directions;
+		
+		private System.Nullable<int> _MedicineCategoryId;
+		
+		private string _MedicineDetail;
+		
 		private EntitySet<MedicineIngredient> _MedicineIngredients;
+		
+		private EntityRef<MedicineCategory> _MedicineCategory;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -783,11 +802,18 @@ namespace TriCareAPI
     partial void OnMedicineIdChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
+    partial void OnDirectionsChanging(string value);
+    partial void OnDirectionsChanged();
+    partial void OnMedicineCategoryIdChanging(System.Nullable<int> value);
+    partial void OnMedicineCategoryIdChanged();
+    partial void OnMedicineDetailChanging(string value);
+    partial void OnMedicineDetailChanged();
     #endregion
 		
 		public Medicine()
 		{
 			this._MedicineIngredients = new EntitySet<MedicineIngredient>(new Action<MedicineIngredient>(this.attach_MedicineIngredients), new Action<MedicineIngredient>(this.detach_MedicineIngredients));
+			this._MedicineCategory = default(EntityRef<MedicineCategory>);
 			OnCreated();
 		}
 		
@@ -831,6 +857,70 @@ namespace TriCareAPI
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Directions", DbType="NChar(200) NOT NULL", CanBeNull=false)]
+		public string Directions
+		{
+			get
+			{
+				return this._Directions;
+			}
+			set
+			{
+				if ((this._Directions != value))
+				{
+					this.OnDirectionsChanging(value);
+					this.SendPropertyChanging();
+					this._Directions = value;
+					this.SendPropertyChanged("Directions");
+					this.OnDirectionsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MedicineCategoryId", DbType="Int")]
+		public System.Nullable<int> MedicineCategoryId
+		{
+			get
+			{
+				return this._MedicineCategoryId;
+			}
+			set
+			{
+				if ((this._MedicineCategoryId != value))
+				{
+					if (this._MedicineCategory.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnMedicineCategoryIdChanging(value);
+					this.SendPropertyChanging();
+					this._MedicineCategoryId = value;
+					this.SendPropertyChanged("MedicineCategoryId");
+					this.OnMedicineCategoryIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MedicineDetail", DbType="NChar(100)")]
+		public string MedicineDetail
+		{
+			get
+			{
+				return this._MedicineDetail;
+			}
+			set
+			{
+				if ((this._MedicineDetail != value))
+				{
+					this.OnMedicineDetailChanging(value);
+					this.SendPropertyChanging();
+					this._MedicineDetail = value;
+					this.SendPropertyChanged("MedicineDetail");
+					this.OnMedicineDetailChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Medicine_MedicineIngredient", Storage="_MedicineIngredients", ThisKey="MedicineId", OtherKey="MedicineId")]
 		public EntitySet<MedicineIngredient> MedicineIngredients
 		{
@@ -841,6 +931,40 @@ namespace TriCareAPI
 			set
 			{
 				this._MedicineIngredients.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MedicineCategory_Medicine", Storage="_MedicineCategory", ThisKey="MedicineCategoryId", OtherKey="MedicineCategoryId", IsForeignKey=true)]
+		public MedicineCategory MedicineCategory
+		{
+			get
+			{
+				return this._MedicineCategory.Entity;
+			}
+			set
+			{
+				MedicineCategory previousValue = this._MedicineCategory.Entity;
+				if (((previousValue != value) 
+							|| (this._MedicineCategory.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MedicineCategory.Entity = null;
+						previousValue.Medicines.Remove(this);
+					}
+					this._MedicineCategory.Entity = value;
+					if ((value != null))
+					{
+						value.Medicines.Add(this);
+						this._MedicineCategoryId = value.MedicineCategoryId;
+					}
+					else
+					{
+						this._MedicineCategoryId = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("MedicineCategory");
+				}
 			}
 		}
 		
@@ -874,6 +998,120 @@ namespace TriCareAPI
 		{
 			this.SendPropertyChanging();
 			entity.Medicine = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.MedicineCategory")]
+	public partial class MedicineCategory : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _MedicineCategoryId;
+		
+		private string _Name;
+		
+		private EntitySet<Medicine> _Medicines;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnMedicineCategoryIdChanging(int value);
+    partial void OnMedicineCategoryIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    #endregion
+		
+		public MedicineCategory()
+		{
+			this._Medicines = new EntitySet<Medicine>(new Action<Medicine>(this.attach_Medicines), new Action<Medicine>(this.detach_Medicines));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MedicineCategoryId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int MedicineCategoryId
+		{
+			get
+			{
+				return this._MedicineCategoryId;
+			}
+			set
+			{
+				if ((this._MedicineCategoryId != value))
+				{
+					this.OnMedicineCategoryIdChanging(value);
+					this.SendPropertyChanging();
+					this._MedicineCategoryId = value;
+					this.SendPropertyChanged("MedicineCategoryId");
+					this.OnMedicineCategoryIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NChar(30) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MedicineCategory_Medicine", Storage="_Medicines", ThisKey="MedicineCategoryId", OtherKey="MedicineCategoryId")]
+		public EntitySet<Medicine> Medicines
+		{
+			get
+			{
+				return this._Medicines;
+			}
+			set
+			{
+				this._Medicines.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Medicines(Medicine entity)
+		{
+			this.SendPropertyChanging();
+			entity.MedicineCategory = this;
+		}
+		
+		private void detach_Medicines(Medicine entity)
+		{
+			this.SendPropertyChanging();
+			entity.MedicineCategory = null;
 		}
 	}
 	

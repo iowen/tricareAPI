@@ -11,6 +11,7 @@ using TriCareAPI.Utilities;
 
 namespace TriCareAPI.Controllers
 {
+    [Authorize]
     public class PrescriberLoginController : ApiController
     {
         // GET api/<controller>
@@ -20,9 +21,17 @@ namespace TriCareAPI.Controllers
         }
 
         // GET api/<controller>/5
-        public string Get(int id)
+        public string Get(string email)
         {
-            return "value";
+            var util = new PrescriberUtil(new TriCareDataDataContext());
+            var result = util.GetPrescriberByEmail(email);
+            string returnValue = "";
+            if (result.PrescriberId > 0)
+                returnValue = "true";
+            else
+                returnValue = "false";
+            var json = new JavaScriptSerializer().Serialize(returnValue);
+            return json;
         }
 
         // POST api/<controller>

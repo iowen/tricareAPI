@@ -26,25 +26,26 @@ namespace TriCareAPI.Providers
 
             _publicClientId = publicClientId;
         }
-
+        private static bool CheckPassword(string username, string password)
+        {
+            return username == "TcareApp" && password == "Tcare1234";
+        }
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
+            //var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
 
-            ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
-
-            if (user == null)
+           // ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
+            var user = CheckPassword(context.UserName, context.Password);
+            if (!user)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
                 return;
             }
 
-            ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
-               OAuthDefaults.AuthenticationType);
-            ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
-                CookieAuthenticationDefaults.AuthenticationType);
+            ClaimsIdentity oAuthIdentity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
+            ClaimsIdentity cookiesIdentity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
 
-            AuthenticationProperties properties = CreateProperties(user.UserName);
+            AuthenticationProperties properties = CreateProperties(context.UserName);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);

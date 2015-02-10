@@ -28,12 +28,14 @@ namespace TriCareAPI.Utilities
                 if (appSync.LastUpdate > model.LastAppDataSync)
                 {
                     var iUtil = new InsuranceCarrierUtil(new TriCareDataDataContext());
+                    var cUtil = new MedicineCategoryUtil(new TriCareDataDataContext());
                     var mUtil = new MedicineUtil(new TriCareDataDataContext());
                     var inUtil = new IngredientUtil(new TriCareDataDataContext());
                     var minUtil = new MedicineIngredientUtil(new TriCareDataDataContext());
                     var rUtil = new RefillUtil(new TriCareDataDataContext());
                     appSyncData.Updated = appSync.LastUpdate;
                     appSyncData.InsuranceCarriers = iUtil.ConvertListToModel(iUtil.GetInsuranceCarriers());
+                    appSyncData.Categories = cUtil.ConvertListToModel(cUtil.GetMedicineCategories());
                     appSyncData.Medicines = mUtil.ConvertListToModel(mUtil.GetMedicines());
                     appSyncData.Ingredients = inUtil.ConvertListToModel(inUtil.GetIngredients());
                     appSyncData.MedicineIngredients = minUtil.ConvertListToModel(minUtil.GetMedicineIngredients());

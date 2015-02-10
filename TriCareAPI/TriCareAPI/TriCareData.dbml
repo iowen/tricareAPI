@@ -38,7 +38,18 @@
     <Type Name="Medicine">
       <Column Name="MedicineId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Directions" Type="System.String" DbType="NChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="MedicineCategoryId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MedicineDetail" Type="System.String" DbType="NChar(100)" CanBeNull="true" />
       <Association Name="Medicine_MedicineIngredient" Member="MedicineIngredients" ThisKey="MedicineId" OtherKey="MedicineId" Type="MedicineIngredient" />
+      <Association Name="MedicineCategory_Medicine" Member="MedicineCategory" ThisKey="MedicineCategoryId" OtherKey="MedicineCategoryId" Type="MedicineCategory" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MedicineCategory" Member="MedicineCategories">
+    <Type Name="MedicineCategory">
+      <Column Name="MedicineCategoryId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="MedicineCategory_Medicine" Member="Medicines" ThisKey="MedicineCategoryId" OtherKey="MedicineCategoryId" Type="Medicine" />
     </Type>
   </Table>
   <Table Name="dbo.MedicineIngredient" Member="MedicineIngredients">

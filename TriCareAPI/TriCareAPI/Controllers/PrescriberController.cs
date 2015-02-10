@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Web.Http;
 using System.Web.Script.Serialization;
 using TriCareAPI.Utilities;
 
 namespace TriCareAPI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class PrescriberController : ApiController
     {
         // GET api/values
@@ -38,6 +39,33 @@ namespace TriCareAPI.Controllers
             result.PrescriberId = 0;
             var util = new PrescriberUtil(new TriCareDataDataContext());
             var outPut = util.CreatePrescriber(result);
+            var eu = new EmailUtil();
+            var en = new Encrypter();
+            try {
+                if (outPut > 0)
+                {
+                    string fromPassword = "10f14lif3";
+                    using (MailMessage mail = new MailMessage("admin@tricarewellness.com", "owen1.watson@gmail.com"))
+                    {
+                        using (SmtpClient client = new SmtpClient())
+                        {
+                            client.Port = 80;
+                            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                            client.UseDefaultCredentials = false;
+                            client.Credentials = new NetworkCredential("admin@tricarewellness.com", fromPassword);
+                            client.Host = "smtpout.secureserver.net";
+                            mail.Subject = "Welcome To TriCare Wellness App";
+                            mail.IsBodyHtml = true;
+                            mail.Body = eu.GetWelcomeEmail(result.FirstName.Trim(), result.LastName.Trim(), result.Email.Trim(), en.GetDecryption(result.Password.Trim()));
+                            client.Send(mail);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
             var json = JsonConvert.SerializeObject(outPut);
             return json;
         }

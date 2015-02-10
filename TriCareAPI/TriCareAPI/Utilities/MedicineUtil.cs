@@ -50,7 +50,7 @@ namespace TriCareAPI.Utilities
         public MedicineModel ConvertToModel(Medicine item)
         {
  
-            return new MedicineModel() { MedicineId = item.MedicineId, Name = item.Name};
+            return new MedicineModel() { MedicineId = item.MedicineId, Name = item.Name.Trim(), Directions = item.Directions.Trim(), MedicineCategoryId = item.MedicineCategoryId.Value, MedicineDetail = item.MedicineDetail.Trim()};
         }
 
         public MedicineWithIngredientsModel ConvertToModelWithIngredients(Medicine item)
@@ -61,7 +61,7 @@ namespace TriCareAPI.Utilities
             {
                 ingredientList.Add(new MedicineIngredientModel() { MedicineIngredientId = ingredient.MedicineIngredientId, MedicineId = ingredient.MedicineId, IngredientId = ingredient.IngredientId, Name = ingredient.Ingredient.Name, Percentage = ingredient.Percentage });
             }
-            return new MedicineWithIngredientsModel() { MedicineId = item.MedicineId, Name = item.Name, Ingredients = ingredientList };
+            return new MedicineWithIngredientsModel() { MedicineId = item.MedicineId, Name = item.Name.Trim(), Ingredients = ingredientList, Directions = item.Directions.Trim(), MedicineCategoryId = item.MedicineCategoryId.Value, MedcineDetail = item.MedicineDetail.Trim()};
         }
 
         public List<MedicineModel> ConvertListToModel(List<Medicine> items)
