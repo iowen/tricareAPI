@@ -108,7 +108,7 @@ namespace TriCareAPI.Utilities
 
         public PatientModel ConvertToModel(Patient item)
         {
-            return new PatientModel() { PatientId = item.PatientId, Address = item.Address, City = item.City, InsuranceCarrierIdNumber = item.InsuranceCarrierIdNumber, Email = item.Email, InsuranceCarrierName = item.InsuranceCarrier.Name, FirstName = item.FirstName, LastName = item.LastName,Phone = item.Phone, PrescriberId = item.PrescriberId, State = item.State, Zip = item.Zip, Allergies = item.Allergies, BirthDate = item.BirthDate, Diagnosis = item.Diagnosis, Gender = item.Gender, InsuranceCarrierId = item.InsuranceCarrierId, InsuranceGroupNumber = item.InsuranceGroupNumber, InsurancePhone = item.InsurancePhone, PaymentType = item.PaymentType, RxBin = item.RxBin, RxPcn = item.RxPcn, SSN = item.SSN , LastUpdate = item.LastUpdate};
+            return new PatientModel() { PatientId = item.PatientId, Address = item.Address, City = item.City, InsuranceCarrierIdNumber = item.InsuranceCarrierIdNumber, Email = item.Email, InsuranceCarrierName = item.InsuranceCarrier.Name, FirstName = item.FirstName, LastName = item.LastName,Phone = item.Phone, PrescriberId = item.PrescriberId, State = item.State, Zip = item.Zip, Allergies = item.Allergies, BirthDate = item.BirthDate, Diagnosis = item.Diagnosis, Gender = item.Gender, InsuranceCarrierId = item.InsuranceCarrierId, InsuranceGroupNumber = item.InsuranceGroupNumber, InsurancePhone = item.InsurancePhone, PaymentType = item.PaymentType, RxBin = item.RxBin, RxPcn = item.RxPcn, SSN = item.SSN.Value , LastUpdate = item.LastUpdate};
         }
 
         public List<PatientModel> ConvertListToModel(List<Patient> items)

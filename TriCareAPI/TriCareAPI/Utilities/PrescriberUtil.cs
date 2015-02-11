@@ -97,12 +97,14 @@ namespace TriCareAPI.Utilities
             presc.State = item.State;
             presc.Zip = item.Zip;
             presc.LastUpdate = DateTime.Now;
+            presc.Active = item.Active;
+            presc.Verified = item.Verified;
             db.SubmitChanges();
         }
 
         public PrescriberModel ConvertToModel(Prescriber item)
         {
-            return new PrescriberModel() { AccountId = item.AccountId, Address = item.Address, City = item.City, DeaNumber = item.DeaNumber, Email = item.Email, Fax = item.Fax, FirstName = item.FirstName, LastName = item.LastName, LicenseNumber = item.LicenseNumber, NpiNumber = item.NpiNumber, Password = item.Password, Phone = item.Phone, PrescriberId = item.PrescriberId, State = item.State, Zip = item.Zip, LastUpdate = item.LastUpdate };
+            return new PrescriberModel() { AccountId = item.AccountId, Address = item.Address, City = item.City, DeaNumber = item.DeaNumber, Email = item.Email, Fax = item.Fax, FirstName = item.FirstName, LastName = item.LastName, LicenseNumber = item.LicenseNumber, NpiNumber = item.NpiNumber, Password = item.Password, Phone = item.Phone, PrescriberId = item.PrescriberId, State = item.State, Zip = item.Zip, LastUpdate = item.LastUpdate, Active = item.Active, Verified = item.Verified };
         }
 
         public List<PrescriberModel> ConvertListToModel(List<Prescriber> items)
@@ -121,7 +123,7 @@ namespace TriCareAPI.Utilities
             {
                 var encrypter = new Encrypter();
                 var pwd = encrypter.GetEncryption(model.Password.Trim());
-                return db.Prescribers.First(a => a.Email == model.Email && a.Password == pwd);
+                return db.Prescribers.First(a => a.Email == model.Email && a.Password == pwd && a.Active == true);
             }
             catch (Exception ex)
             {

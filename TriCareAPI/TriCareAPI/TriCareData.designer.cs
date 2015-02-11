@@ -901,7 +901,7 @@ namespace TriCareAPI
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MedicineDetail", DbType="NChar(100)")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MedicineDetail", DbType="NChar(100) NOT NULL", CanBeNull=false)]
 		public string MedicineDetail
 		{
 			get
@@ -1349,7 +1349,7 @@ namespace TriCareAPI
 		
 		private System.DateTime _BirthDate;
 		
-		private int _SSN;
+		private System.Nullable<int> _SSN;
 		
 		private string _Address;
 		
@@ -1405,7 +1405,7 @@ namespace TriCareAPI
     partial void OnGenderChanged();
     partial void OnBirthDateChanging(System.DateTime value);
     partial void OnBirthDateChanged();
-    partial void OnSSNChanging(int value);
+    partial void OnSSNChanging(System.Nullable<int> value);
     partial void OnSSNChanged();
     partial void OnAddressChanging(string value);
     partial void OnAddressChanged();
@@ -1573,8 +1573,8 @@ namespace TriCareAPI
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SSN", DbType="Int NOT NULL")]
-		public int SSN
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SSN", DbType="Int")]
+		public System.Nullable<int> SSN
 		{
 			get
 			{
@@ -2326,6 +2326,10 @@ namespace TriCareAPI
 		
 		private System.DateTime _LastUpdate;
 		
+		private bool _Active;
+		
+		private bool _Verified;
+		
 		private EntitySet<Patient> _Patients;
 		
 		private EntitySet<Prescription> _Prescriptions;
@@ -2368,6 +2372,10 @@ namespace TriCareAPI
     partial void OnPasswordChanged();
     partial void OnLastUpdateChanging(System.DateTime value);
     partial void OnLastUpdateChanged();
+    partial void OnActiveChanging(bool value);
+    partial void OnActiveChanged();
+    partial void OnVerifiedChanging(bool value);
+    partial void OnVerifiedChanged();
     #endregion
 		
 		public Prescriber()
@@ -2698,6 +2706,46 @@ namespace TriCareAPI
 					this._LastUpdate = value;
 					this.SendPropertyChanged("LastUpdate");
 					this.OnLastUpdateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Active", DbType="Bit NOT NULL")]
+		public bool Active
+		{
+			get
+			{
+				return this._Active;
+			}
+			set
+			{
+				if ((this._Active != value))
+				{
+					this.OnActiveChanging(value);
+					this.SendPropertyChanging();
+					this._Active = value;
+					this.SendPropertyChanged("Active");
+					this.OnActiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Verified", DbType="Bit NOT NULL")]
+		public bool Verified
+		{
+			get
+			{
+				return this._Verified;
+			}
+			set
+			{
+				if ((this._Verified != value))
+				{
+					this.OnVerifiedChanging(value);
+					this.SendPropertyChanging();
+					this._Verified = value;
+					this.SendPropertyChanged("Verified");
+					this.OnVerifiedChanged();
 				}
 			}
 		}

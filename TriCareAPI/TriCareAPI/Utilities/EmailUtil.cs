@@ -899,6 +899,23 @@ table.divider {
     <![endif]-->
     <meta name=""robots"" content=""noindex,nofollow"">
     <meta property=""og:title"" content=""TriCare Wellness App Registration"">
+<script>
+function httpGet(theUrl)
+{
+    var xmlHttp = null;
+
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( ""GET"", theUrl, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+function verifyPresc(email)
+{
+    var url = ""http://www.teamsavagemma.com/api/Verify?email=""+email;
+    httpGet(url);
+    alert(""Verification Successfull. Please check your email for confirmation"");
+}
+</script>
 </head>
 <body style=""margin: 0;mso-line-height-rule: exactly;padding: 0;min-width: 100%;background-color: #fbfbfb"">
     <style type=""text/css"">
@@ -953,7 +970,7 @@ a:hover{color:#30495c !important}.wrapper .logo div{color:#41637e}.wrapper .logo
                                                 <tr>
                                                     <td class=""padded"" style=""padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px"">
 
-                                                        <h4 style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 18px;line-height: 25px;Margin-bottom: 25px"">Hello, " + firstname + " " + lastname + @"</h4><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 14px;line-height: 25px;Margin-bottom: 25px"">Welcome to Tri-Care Wellness, your preferred Tri-Care provider and home for your individualized wellness needs. You signed up with us because you recognize you need help on your journey to wellness. We are honored you chose us and we look forward to working with you on a personalized program to fit your needs. </p><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 24px"">Your Credentials: <br>Name : " + firstname + " " + lastname + @"<br>Email : " + email + @"<br>Password : " + password + @"</p>
+                                                        <h4 style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 18px;line-height: 25px;Margin-bottom: 25px"">Hello, " + firstname + " " + lastname + @"</h4><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 14px;line-height: 25px;Margin-bottom: 25px"">Welcome to Tri-Care Wellness, your preferred Tri-Care provider and home for your individualized wellness needs. You signed up with us because you recognize you need help on your journey to wellness. We are honored you chose us and we look forward to working with you on a personalized program to fit your needs. </p><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 24px"">Your Credentials: <br>Name : " + firstname + " " + lastname + @"<br>Email : " + email + @"<br>Password : " + password + @"</p><span><a href=""http://www.teamsavagemma.com/api/verify?email="+email+@""" target=""_self"">VERIFY!</a></span>
                                                         <p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 25px"">- TriCare Wellness Team</p>
                                                        
                                                     </td>

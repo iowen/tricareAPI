@@ -221,6 +221,7 @@
     <Compile Include="Controllers\PrescriberLoginController.cs" />
     <Compile Include="Controllers\SyncController.cs" />
     <Compile Include="Controllers\UploadSignatureController.cs" />
+    <Compile Include="Controllers\VerifyController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
