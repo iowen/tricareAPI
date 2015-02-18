@@ -38,14 +38,21 @@ namespace TriCareAPI.Controllers
             var result = new JavaScriptSerializer().Deserialize<Prescriber>(value);
             result.PrescriberId = 0;
             var util = new PrescriberUtil(new TriCareDataDataContext());
-            var outPut = util.CreatePrescriber(result);
+            var prescExist = util.GetPrescriberByEmail(result.Email.Trim());
+            int outPut = 0;
+            if(prescExist.PrescriberId > 0)
+            {
+                var jsonExist = JsonConvert.SerializeObject(outPut);
+                return jsonExist;
+            }
+            outPut = util.CreatePrescriber(result);
             var eu = new EmailUtil();
             var en = new Encrypter();
             try {
                 if (outPut > 0)
                 {
                     string fromPassword = "10f14lif3";
-                    using (MailMessage mail = new MailMessage("admin@tricarewellness.com", "owen1.watson@gmail.com"))
+                    using (MailMessage mail = new MailMessage("admin@tricarewellness.com", result.Email.Trim()))
                     {
                         using (SmtpClient client = new SmtpClient())
                         {

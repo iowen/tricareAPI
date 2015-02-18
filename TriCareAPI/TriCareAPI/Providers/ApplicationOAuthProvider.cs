@@ -28,7 +28,7 @@ namespace TriCareAPI.Providers
         }
         private static bool CheckPassword(string username, string password)
         {
-            return username == "TcareApp" && password == "Tcare1234";
+            return username == AppGlobalContext.AppUsername && password == AppGlobalContext.AppPassword;
         }
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {

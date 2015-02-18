@@ -889,6 +889,32 @@ table.divider {
     width: 318px !important;
   }
 }
+.abtn {
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.abtn:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
     </style>
     <!--[if gte mso 9]>
     <style>
@@ -908,12 +934,6 @@ function httpGet(theUrl)
     xmlHttp.open( ""GET"", theUrl, false );
     xmlHttp.send( null );
     return xmlHttp.responseText;
-}
-function verifyPresc(email)
-{
-    var url = ""http://www.teamsavagemma.com/api/Verify?email=""+email;
-    httpGet(url);
-    alert(""Verification Successfull. Please check your email for confirmation"");
 }
 </script>
 </head>
@@ -970,8 +990,9 @@ a:hover{color:#30495c !important}.wrapper .logo div{color:#41637e}.wrapper .logo
                                                 <tr>
                                                     <td class=""padded"" style=""padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px"">
 
-                                                        <h4 style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 18px;line-height: 25px;Margin-bottom: 25px"">Hello, " + firstname + " " + lastname + @"</h4><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 14px;line-height: 25px;Margin-bottom: 25px"">Welcome to Tri-Care Wellness, your preferred Tri-Care provider and home for your individualized wellness needs. You signed up with us because you recognize you need help on your journey to wellness. We are honored you chose us and we look forward to working with you on a personalized program to fit your needs. </p><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 24px"">Your Credentials: <br>Name : " + firstname + " " + lastname + @"<br>Email : " + email + @"<br>Password : " + password + @"</p><span><a href=""http://www.teamsavagemma.com/api/verify?email="+email+@""" target=""_self"">VERIFY!</a></span>
-                                                        <p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 25px"">- TriCare Wellness Team</p>
+                                                        <h4 style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 18px;line-height: 25px;Margin-bottom: 25px"">Hello, " + firstname + " " + lastname + @"</h4><br><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 14px;line-height: 25px;Margin-bottom: 25px"">Welcome to Tri-Care Wellness, your preferred Tri-Care provider and home for your individualized wellness needs. You signed up with us because you recognize you need help on your journey to wellness. We are honored you chose us and we look forward to working with you on a personalized program to fit your needs. </p><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 24px"">Your Credentials: <br>Name : " + firstname + " " + lastname + @"<br>Email : " + email + @"<br>Password : " + password + @"</p><p></p><p>To verify your account please click on the button below.</p><span><br>
+                                               <br><a href="""+AppGlobalContext.ApiUrl+@"api/verify?email="+ email + @""" class=""abtn"">Verify</a></span><br>
+                                                   <br>     <p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 25px"">- TriCare Wellness Team</p>
                                                        
                                                     </td>
                                                 </tr>
@@ -2011,7 +2032,7 @@ a:hover{color:#30495c !important}.wrapper .logo div{color:#41637e}.wrapper .logo
                                                 <tr>
                                                     <td class=""padded"" style=""padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px"">
 
-                                                        <h4 style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 18px;line-height: 25px;Margin-bottom: 25px"">Hello, " + firstname + " " + lastname + @"</h4><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 14px;line-height: 25px;Margin-bottom: 25px"">You've requested that your log in credentials be sent to you. If this was done in error please contact us at 1-800-295-2820. Please do not reply to this automatically generated email.  </p><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 24px"">Your Credentials: <br>Name : " + firstname + " " + lastname + @"<br>Email : " + email + @"<br>Password : " + password + @"</p>
+                                                        <h4 style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 18px;line-height: 25px;Margin-bottom: 25px"">Hello, " + firstname + " " + lastname + @"</h4><br><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 14px;line-height: 25px;Margin-bottom: 25px"">You've requested that your log in credentials be sent to you. If this was done in error please contact us at 1-800-295-2820. Please do not reply to this automatically generated email.  </p><p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 24px"">Your Credentials: <br>Name : " + firstname + " " + lastname + @"<br>Email : " + email + @"<br>Password : " + password + @"</p>
                                                         <p style=""Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 25px"">- TriCare Wellness Team</p>
                                                        
                                                     </td>
@@ -2453,7 +2474,7 @@ table.divider {
   Margin-bottom: 24px;
   padding: 2px;
 }
-.btn a {
+.btn a{
   border: 1px solid #ffffff;
   display: inline-block;
   font-size: 13px;

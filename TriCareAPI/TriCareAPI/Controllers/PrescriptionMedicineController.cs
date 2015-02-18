@@ -43,9 +43,11 @@ namespace TriCareAPI.Controllers
         {
            
             var folderName = "Uploads";
-            var PATH = HttpContext.Current.Server.MapPath("~/" + folderName);
-            var fPath = Path.Combine(PATH,file.FileName);
-            string nameFriendly = "test" + DateTime.Now.ToString("hh-mm-ss-dd-MM") + ".pdf";
+            var dtn = DateTime.Now.ToString("hh-mm-ss-dd-MM");
+            var PATH = HostingEnvironment.ApplicationPhysicalPath+"/" + folderName;
+            var signaturename = "sig-" + dtn + ".png";
+            var fPath = Path.Combine(PATH,signaturename);
+            string nameFriendly = "script-" + dtn + ".pdf";
             var pPath = Path.Combine(PATH,nameFriendly);
             file.SaveAs(fPath);
             try{
@@ -158,7 +160,7 @@ namespace TriCareAPI.Controllers
             pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, prq);
             pdfStamper.AcroFields.SetField(pdfStamper.AcroFields.Fields.ElementAt(fieldCount++).Key, medItem.Directions.Trim());
             var sig = iTextSharp.text.Image.GetInstance(signature);
-            sig.ScaleAbsolute(30, 30);
+            sig.ScaleAbsolute(40, 40);
             sig.SetAbsolutePosition(60, 85);
 
 
@@ -235,7 +237,7 @@ namespace TriCareAPI.Controllers
             }
             try
             {
-                using (MailMessage mail = new MailMessage("admin@tricarewellness.com", "owen1.watson@gmail.com"))
+                using (MailMessage mail = new MailMessage("admin@tricarewellness.com", "larry@1goodpharmacist.com"))
                 {
                     using (SmtpClient client = new SmtpClient())
                     {

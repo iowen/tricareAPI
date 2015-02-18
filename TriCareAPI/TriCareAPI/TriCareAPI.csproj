@@ -170,6 +170,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AppGlobalContext.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -208,6 +209,8 @@
     <Compile Include="Controllers\AccountController1.cs" />
     <Compile Include="Controllers\ForgotPasswordController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PatientEditController.cs" />
+    <Compile Include="Controllers\PrescriberEditController.cs" />
     <Compile Include="Controllers\RefillQuantityController.cs" />
     <Compile Include="Controllers\RefillAmountController.cs" />
     <Compile Include="Controllers\PrescriptionMedicineController.cs" />
@@ -302,6 +305,7 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <None Include="Properties\PublishProfiles\fertilscripts.com - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\teamsavagemma.com - Web Deploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
